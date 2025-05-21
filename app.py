@@ -4,7 +4,7 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import text, Column, Integer, String, ForeignKey, DateTime  # Add DateTime here
 from sqlalchemy.sql.expression import or_
 import os
-from database import Gebruiker, Boek, Genre, Auteur, Thema,Reservatie
+from database import Gebruiker
 from werkzeug.utils import secure_filename
 from flask_migrate import Migrate
 from sqlalchemy.orm import relationship, mapped_column
@@ -28,7 +28,7 @@ app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "sqlalchemy"
 # het pad configugeren van de route naar de database
 basedir = os.path.abspath(os.path.dirname(__file__)) 
-app.config["SQLALCHEMY_DATABASE_URI"] = f"sqlite:///{os.path.join(basedir, 'instance', 'bib.db')}"
+app.config["SQLALCHEMY_DATABASE_URI"] = f"sqlite:///{os.path.join(basedir, 'instance', 'LEER.db')}"
 app.config['UPLOAD_FOLDER'] = 'static/upload'
 
 # de beveillingssleutel voor rededenen
@@ -74,6 +74,56 @@ def inject_gebruiker():
         'rol': getattr(gebruiker, 'rol', None)
     }
 
+@app.route("/")
+def index():
+    # hier word de email uit de sessie gehaald
+    email = session.get('email')
+    #indien er geen email is, wordt je terug gestuurd naar de inlog pagina
+    if email == None:
+        return redirect(url_for("login"))
+    else:
+    # zoeken op basis van email, welke gebruikers naam je hebt om nadien op de hoofdpagina weer te geven.
+        user = db.session.query(Gebruiker).filter_by(email=email).first()
+        if user is None:
+            return redirect(url_for("login"))
+    return render_template("index.html")
+
+@app.route("/register", methods=["POST", "GET"])
+def register():
+    rol_choices = [(value, label) for value, label in Gebruiker.rol_list]
+    #als de methode post is runt hij onderstaande commando's
+    if request.method == "POST":
+        register_email = request.form["register_email"]
+        if checkContains(Gebruiker,"email",register_email) == False:
+
+    # alle velden die de gebruiker heeft ingevuld eruit halen (post)
+            register_name = request.form["name"]
+            register_achternaam = request.form["achternaam"]
+            register_email = request.form["register_email"]
+            register_password = request.form["register_paswoord"]
+            #rol = request.form["recht"]
+
+            if "@" not in register_email:
+                flash("Deze email bestaat niet","error")
+            else:                
+            # een nieuwe gebruiker toevoegen aan de database met volgende velden.
+                new_gebruiker = Gebruiker(naam=register_name,achternaam = register_achternaam, email = register_email, paswoord = register_password)
+            #database voert dit uit
+                db.session.add(new_gebruiker)
+            # het opslaan van de veranderingen
+                db.session.commit()
+
+            flash("Registratie succesvol","success")
+            return redirect(url_for("login"))
+        else:
+             flash("Deze email adress is al in gebruik.")
+             return render_template("register.html",rol_choices=rol_choices)
+    else:
+        #als het geen post is maar een get, steekt hij de rollen die hij uit de database haalt in een variabele en dan geeft hij deze weer in de rendertemplate om weer te geven.
+        
+        return render_template("register.html",rol_choices=rol_choices)
+
+
 
 @app.route("/login", methods=["POST", "GET"])
 def login():
@@ -93,3 +143,21 @@ def login():
     
     # Only flash this message if it's a GET request and not a redirect
     return render_template("login.html", messages=get_flashed_messages(with_categories=True))
+
+@app.route("/logout")
+def logout():
+    session.clear()
+    return redirect(url_for("login"))
+
+@app.teardown_appcontext
+def shutdown_session(exception=None):
+    """
+    Ensures that the database session is properly closed after each request.
+    This prevents issues like stale connections or locked tables.
+    """
+    db.session.remove()
+
+if __name__ == "__main__":
+    with app.app_context():
+        db.create_all()
+    app.run(debug=True)

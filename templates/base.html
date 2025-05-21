@@ -29,14 +29,6 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ms-auto">
-                <li class="nav-item me-2">
-                    <a href="{{ url_for('boeken') }}" class="btn btn-primary text-white">Bibliotheek</a>
-                </li>
-                {% if rol in ['admin', 'bibliothecaris'] %}
-                    <li class="nav-item me-2">
-                        <a href="{{ url_for('admin') }}" class="btn btn-secondary text-white">Admin</a>
-                    </li>
-                {% endif %}
                 {% if email %}
                     <li class="nav-item me-2">
                         <a href="{{ url_for('logout') }}" class="btn btn-danger text-white">Logout</a>

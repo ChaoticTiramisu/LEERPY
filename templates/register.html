@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block title %} Register {% endblock title %}
+
+{% block body %}
+<body class="bg-light">
+    <div class="d-flex justify-content-center align-items-center vh-100">
+        <div class="card shadow p-4" style="width: 100%; max-width: 500px;">
+            <h2 class="text-center mb-4">Registreer</h2>
+            <form action="/register" method="post">
+                <div class="mb-3">
+                    <label for="name" class="form-label">Naam</label>
+                    <input type="text" class="form-control" id="name" name="name" placeholder="Naam" required>
+                </div>
+                <div class="mb-3">
+                    <label for="achternaam" class="form-label">Achternaam</label>
+                    <input type="text" class="form-control" id="achternaam" name="achternaam" placeholder="Achternaam" required>
+                </div>
+                <div class="mb-3">
+                    <label for="register_email" class="form-label">Email</label>
+                    <input type="text" class="form-control" id="register_email" name="register_email" placeholder="E-mail" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" title="Dit is geen gekend email." required>
+                </div>
+                <div class="mb-3">
+                    <label for="register_paswoord" class="form-label">Wachtwoord</label>
+                    <input type="password" class="form-control" id="register_paswoord" name="register_paswoord" placeholder="Wachtwoord" required oninput="validatePassword()">
+                    <div id="passwordFeedback" class="form-text text-danger" style="display: none;"></div>
+                </div>
+                <div class="mb-3">
+                   <!-- <input type="hidden" id="recht" name="recht" value="ontlener">-->
+                </div>
+                <button type="submit" id="submitButton" class="btn btn-primary w-100" disabled>Registreer</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function validatePassword() {
+            const password = document.getElementById('register_paswoord').value;
+            const feedback = document.getElementById('passwordFeedback');
+            const submitButton = document.getElementById('submitButton');
+
+            // Wachtwoord vereisten
+            const minLength = 8;
+            const hasUpperCase = /[A-Z]/.test(password);
+            const hasLowerCase = /[a-z]/.test(password);
+            const hasNumbers = /\d/.test(password);
+            const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+
+            // Checken of de vereisten behaald zijn
+            if (password.length < minLength || !hasUpperCase || !hasLowerCase || !hasNumbers || !hasSpecialChar) {
+                feedback.textContent = 'Wachtwoord moet minstens 8 tekens lang zijn, hoofdletters, kleine letters, cijfers en speciale tekens bevatten.';
+                feedback.style.display = 'block';
+                feedback.classList.remove('text-success');
+                feedback.classList.add('text-danger');
+                submitButton.disabled = true;
+            } else {
+                feedback.textContent = 'Wachtwoord is goed.';
+                feedback.style.display = 'block';
+                feedback.classList.remove('text-danger');
+                feedback.classList.add('text-success');
+                submitButton.disabled = false;
+            }
+        }
+    </script>
+</body>
+{% endblock body %}

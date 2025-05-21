@@ -6,7 +6,7 @@ from datetime import datetime
 import click
 
 # Initialize the database engine
-engine = create_engine("sqlite:///instance/bib.db", echo=True)
+engine = create_engine("sqlite:///instance/LEER.db", echo=True)
 
 # Create the database if it doesn't exist
 if not database_exists(engine.url):
@@ -28,9 +28,9 @@ class Gebruiker(Base):
         ('leerkracht', 'Leerkracht'),
         ('leerling', 'Leerling'),
     ]
-    rol = mapped_column(ChoiceType(rol_list, impl=String()), nullable=False)
-
-    reservaties = relationship("Reservatie", back_populates="gebruiker", lazy="select")
+    rol = mapped_column(ChoiceType(rol_list, impl=String()), nullable=True)
 
     def __repr__(self):
-        return f"<Gebruiker(id={self.id}, naam={self.naam}, email={self.email}, rol={self.rol})>"
+        return f"<Gebruiker(id={self.id}, naam={self.naam}, email={self.email})>"
+
+Base.metadata.create_all(engine)
