@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block title %} Login {% endblock title %}
+
+{% block body %}
+<body class="bg-light">
+    <div class="d-flex justify-content-center align-items-center vh-100">
+        <div class="card shadow p-4" style="width: 100%; max-width: 400px;">
+            <h2 class="text-center mb-4">Log-in</h2>
+            <form action="/login" method="post">
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email adres</label>
+                    <input type="text" class="form-control" id="email" name="login_email" placeholder="E-mail" required>
+                </div>
+                <div class="mb-3">
+                    <label for="password" class="form-label">Wachtwoord</label>
+                    <input type="password" class="form-control" id="password" name="login_paswoord" placeholder="Wachtwoord" required>
+                </div>
+                <div class="mb-3 text-center">
+                    <a href="#" class="text-decoration-none">Wachtwoord vergeten?</a>
+                </div>
+                <button type="submit" class="btn btn-primary w-100">Log-in</button>
+            </form>
+            <div class="text-center mt-3">
+                <a href="{{ url_for('register') }}" class="text-decoration-none">Nog geen account?</a>
+            </div>
+        </div>
+    </div>
+</body>
+{% endblock body %}

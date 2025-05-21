@@ -1,0 +1,170 @@
+/* General Styles */
+body {
+    font-family: 'Poppins', sans-serif;
+    line-height: 1.6;
+    background-color: #ffffff;
+    color: #302683;
+    margin: 0;
+    padding-top: 100px; /* Adjust for fixed header */
+}
+
+/* Title Styling */
+h1, h2 {
+    color: #302683;
+    font-weight: bold;
+    text-align: center;
+}
+
+/* Form Styling */
+.custom-form-container form {
+    background-color: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 20px;
+    margin: 20px auto;
+    max-width: 600px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.custom-form-container .form-label {
+    font-weight: bold;
+    color: #302683;
+}
+
+.custom-form-container .form-control {
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    padding: 10px;
+}
+
+.custom-form-container .btn-primary {
+    background-color: #302683;
+    border-color: #302683;
+    transition: background-color 0.3s ease;
+}
+
+.custom-form-container .btn-primary:hover {
+    background-color: #4b3c8e;
+    border-color: #4b3c8e;
+}
+
+/* Calendar Styling */
+#calendar {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 10px;
+    background-color: #f9f9f9;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Header Styling */
+header.navbar {
+    height: 80px; /* Increase the height */
+    padding: 15px 20px; /* Add more padding */
+    background-color: #f8f9fa; /* Light background color */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+}
+
+header .navbar-brand img {
+    height: 60px; /* Increase logo size */
+}
+
+header .navbar-nav .nav-link {
+    font-size: 1.1rem; /* Increase font size */
+    font-weight: bold; /* Make text bold */
+    color: #302683; /* Match the theme color */
+    transition: color 0.3s ease;
+}
+
+header .navbar-nav .nav-link:hover {
+    color: #4b3c8e; /* Add hover effect */
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .custom-form-container form {
+        width: 95%;
+    }
+}
+
+.card {
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.card-img-top {
+    height: 200px;
+    object-fit: cover;
+}
+
+.card-body {
+    padding: 15px;
+}
+
+.card .btn {
+    transition: transform 0.2s ease;
+}
+
+.card .btn:hover {
+    transform: scale(1.05);
+}
+
+/* Flash Message Animations */
+.flash-message {
+    animation: fadeInDown 0.5s ease, fadeOutUp 0.5s ease 4.5s;
+}
+
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeOutUp {
+    from {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    to {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+}
+
+footer {
+    background-color: #343a40; /* Dark background */
+    color: #ffffff; /* White text */
+}
+
+footer h5 {
+    font-size: 1rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+}
+
+footer a {
+    color: #ffffff;
+    transition: color 0.3s ease;
+}
+
+footer a:hover {
+    color: #ffc107; /* Glorieux yellow accent */
+}
+
+footer ul {
+    padding: 0;
+    list-style: none;
+}
+
+footer ul li {
+    margin-bottom: 0.5rem;
+}
+
+footer ul li i {
+    margin-right: 0.5rem;
+}
