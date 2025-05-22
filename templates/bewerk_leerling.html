@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block title %} Bewerk Gebruiker {% endblock title %}
+
+{% block body %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">Gebruiker Bewerken</h4>
+                </div>
+                <div class="card-body">
+                    <form method="POST">
+                        <div class="mb-3">
+                            <label for="naam" class="form-label">Voornaam:</label>
+                            <input type="text" id="naam" name="naam" class="form-control" value="{{ gebruiker.naam }}" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="achternaam" class="form-label">Achternaam:</label>
+                            <input type="text" id="achternaam" name="achternaam" class="form-control" value="{{ gebruiker.achternaam }}" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="email" class="form-label">E-mail:</label>
+                            <input type="text" id="email" name="email" class="form-control" value="{{ gebruiker.email }}" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="recht" class="form-label">Rol:</label>
+                            <select name="recht" id="recht" class="form-select">
+                                {% for choice, label in rol_choices %}
+                                    <option value="{{ choice }}" {% if gebruiker.rol == choice %}selected{% endif %}>{{ label }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="vak" class="form-label">Vak:</label>
+                            <select name="vak" id="vak" class="form-select">
+                                {% for choice, label in vak_choices %}
+                                    <option value="{{ choice }}" {% if gebruiker.vak == choice %}selected{% endif %}>{{ label }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="actief" class="form-label">Blokkeren</label> <br>
+                            <input type="checkbox" id="actief" name="actief" class="form-check-input"
+                                {% if def_actief %} checked {% endif %}>
+                            <label for="actief" class="form-check-label">Actief?</label>
+                        </div>
+
+                        <div class="d-flex justify-content-between">
+                            <button type="submit" class="btn btn-success">Opslaan</button>
+                            <a href="{{ url_for('leerkracht') }}" class="btn btn-secondary">Annuleren</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock body %}

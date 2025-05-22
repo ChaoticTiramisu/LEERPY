@@ -23,15 +23,22 @@ class Gebruiker(Base):
     achternaam = mapped_column(String, nullable=False)
     email = mapped_column(String, nullable=False, unique=True, index=True)
     paswoord = mapped_column(String, nullable=False)
+    vak_list = [
+        ('fysica', 'Fysica'),
+        ('nederlands', 'Nederlands'),
+        ('engels', 'Engels'),
+        ('frans', 'Frans')
+    ]
+    vak = mapped_column(ChoiceType(vak_list, impl=String()), nullable=False)
     actief = mapped_column(Boolean, default=True)
     rol_list = [
         ('leerkracht', 'Leerkracht'),
         ('leerling', 'Leerling'),
     ]
-    rol = mapped_column(ChoiceType(rol_list, impl=String()), nullable=True)
+    rol = mapped_column(ChoiceType(rol_list, impl=String()), nullable=false)
 
     def __repr__(self):
-        return f"<Gebruiker(id={self.id}, naam={self.naam}, email={self.email})>"
+        return f"<Gebruiker(id={self.id}, naam={self.naam}, email={self.email}, rol={self.rol}, vak={self.vak})>"
 
 Base.metadata.create_all(engine)
 

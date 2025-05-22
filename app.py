@@ -153,6 +153,31 @@ def leerkracht():
         return redirect(url_for("index"))
     return render_template("leerkracht.html", gebruikers=gebruikers)
 
+@app.route('/bewerk_gebruiker/<int:gebruiker_id>', methods=['GET', 'POST'])
+def bewerk_leerling(gebruiker_id):
+    gebruiker = db.session.query(Gebruiker).get(gebruiker_id)
+    rol_choices = [
+        ('leerkracht', 'Leerkracht'),
+        ('leerling', 'Leerling'),
+    ]
+    vak_choices = [
+        ('fysica', 'Fysica'),
+        ('nederlands', 'Nederlands'),
+        ('engels', 'Engels'),
+        ('frans', 'Frans')
+    ]
+    if request.method == 'POST':
+        gebruiker.naam = request.form['naam']
+        gebruiker.achternaam = request.form['achternaam']
+        gebruiker.email = request.form['email']
+        gebruiker.rol = request.form.get('recht')
+        gebruiker.actief = request.form.get('actief') == "on"
+        
+        db.session.commit()
+        return redirect(url_for('leerkracht'))  # Terug naar de gebruikerslijst
+
+    return render_template('bewerk_leerling.html', gebruiker=gebruiker, rol_choices=rol_choices, vak_choices=vak_choices, def_actief=gebruiker.actief)
+
 
 @app.route("/logout")
 def logout():

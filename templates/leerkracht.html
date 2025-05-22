@@ -52,6 +52,9 @@
                                     <td>{{ gebruiker.achternaam }}</td>
                                     <td>{{ gebruiker.email }}</td>
                                     <td>{{ gebruiker.rol }}</td>
+                                    <td>
+                                        <a href="{{ url_for('bewerk_leerling', gebruiker_id=gebruiker.id) }}" class="btn btn-sm btn-warning">Wijzig</a>
+                                    </td>
                                 </tr>
                                 {% endfor %}
                             </tbody>
