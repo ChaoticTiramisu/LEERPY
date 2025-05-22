@@ -34,3 +34,27 @@ class Gebruiker(Base):
         return f"<Gebruiker(id={self.id}, naam={self.naam}, email={self.email})>"
 
 Base.metadata.create_all(engine)
+
+@click.command("create-admin")
+def admin_account():
+    admin_email = "admin@example.com"
+    admin_password = "admin123"  # Default password
+    with Session(engine) as session:
+        admin = session.query(Gebruiker).filter_by(email=admin_email).first()
+        if not admin:
+            admin = Gebruiker(
+                naam="Admin",
+                achternaam="User",
+                email=admin_email,
+                paswoord=admin_password,  # Store password in plain text
+                rol="leerkracht",
+                actief=True
+            )
+            session.add(admin)
+            session.commit()
+            print(f"Admin account created:\nEmail: {admin_email}\nPassword: {admin_password}")
+        else:
+            print(f"Admin account already exists:\nEmail: {admin_email}")
+
+if __name__ == "__main__":
+    admin_account()

@@ -144,6 +144,16 @@ def login():
     # Only flash this message if it's a GET request and not a redirect
     return render_template("login.html", messages=get_flashed_messages(with_categories=True))
 
+@app.route("/admin/gebruikers", methods=["GET"])
+def leerkracht():
+    # Haal alle gebruikers op uit de database
+    gebruikers = db.session.query(Gebruiker).all()
+    if not gebruikers:
+        flash("Geen gebruikers gevonden.")
+        return redirect(url_for("index"))
+    return render_template("leerkracht.html", gebruikers=gebruikers)
+
+
 @app.route("/logout")
 def logout():
     session.clear()

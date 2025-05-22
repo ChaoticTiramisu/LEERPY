@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+
+{% block title %} Gebruikersbeheer {% endblock title %}
+
+{% block body %}
+<div class="container mt-5">
+    <div class="row">
+        <!-- Sidebar -->
+        <div class="col-md-3">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">Navigatie</h5>
+                    <ul class="list-group">
+                        <li class="list-group-item">
+                            <a href="{{ url_for('index') }}" class="text-decoration-none">Test</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="col-md-9">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h1 class="card-title text-primary">Gebruikersbeheer</h1>
+                    <p class="text-muted">Beheer alle gebruikers in het systeem.</p>
+
+                    <!-- Search Bar -->
+                    <div class="mb-3">
+                        <input type="text" id="searchBar" class="form-control" placeholder="Zoek op naam, e-mailadres of rol...">
+                    </div>
+
+                    <!-- Users Table -->
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Voornaam</th>
+                                    <th>Achternaam</th>
+                                    <th>E-mailadres</th>
+                                    <th>Rol</th>
+                                    <th>Acties</th>
+                                </tr>
+                            </thead>
+                            <tbody id="userTable">
+                                {% for gebruiker in gebruikers %}
+                                <tr>
+                                    <td>{{ gebruiker.id }}</td>
+                                    <td>{{ gebruiker.naam }}</td>
+                                    <td>{{ gebruiker.achternaam }}</td>
+                                    <td>{{ gebruiker.email }}</td>
+                                    <td>{{ gebruiker.rol }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- JavaScript for Search Functionality -->
+<script>
+    document.getElementById('searchBar').addEventListener('input', function () {
+        const filter = this.value.toLowerCase();
+        const rows = document.querySelectorAll('#userTable tr');
+
+        rows.forEach(row => {
+            const cells = row.querySelectorAll('td');
+            const match = Array.from(cells).some(cell => cell.textContent.toLowerCase().includes(filter));
+            row.style.display = match ? '' : 'none';
+        });
+    });
+</script>
+{% endblock body %}
