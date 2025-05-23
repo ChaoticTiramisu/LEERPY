@@ -4,7 +4,7 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import text, Column, Integer, String, ForeignKey, DateTime  # Add DateTime here
 from sqlalchemy.sql.expression import or_
 import os
-from database import Gebruiker
+from database import Gebruiker, Theorie, Vak
 from werkzeug.utils import secure_filename
 from flask_migrate import Migrate
 from sqlalchemy.orm import relationship, mapped_column
@@ -177,6 +177,87 @@ def bewerk_leerling(gebruiker_id):
         return redirect(url_for('leerkracht'))  # Terug naar de gebruikerslijst
 
     return render_template('bewerk_leerling.html', gebruiker=gebruiker, rol_choices=rol_choices, vak_choices=vak_choices, def_actief=gebruiker.actief)
+
+@app.route("/adminworkspace", methods=["GET"])
+def adminworkspace():
+    if session.get('email') is None:
+        return redirect(url_for("login"))
+    
+    # Fetch the logged-in user
+    gebruiker = db.session.query(Gebruiker).filter_by(email=session.get('email')).first()
+    if gebruiker and gebruiker.rol in ["leerkracht"]:
+        # Haal alle genres, themas en auteurs uit de database
+        vakken = db.session.query(Vak.naam).all()
+
+        
+        return render_template("theorie_beheer.html", vakken=vakken)
+    else:
+        abort(404)
+
+@app.route("/adminworkspace/tools/add", methods=["POST"])
+def add():
+    if session.get('email') is None:
+        flash("Je moet ingelogd zijn om deze actie uit te voeren.", "error")
+        return redirect(url_for("login"))
+        
+    test = db.session.query(Gebruiker).filter_by(email=session.get('email')).first()
+    if str(test.rol).lower() not in ["leerkracht"]:
+        flash("Je hebt geen toestemming om deze actie uit te voeren.", "error")
+        abort(403)
+    
+    # Handle genre addition
+    if "vak" in request.form and "theorie_nummer" not in request.form:
+        vak_naam = request.form["vak"].lower()
+        if not checkContains(Vak, "naam", vak_naam):
+            new_vak = Vak(naam=vak_naam)
+            db.session.add(new_vak)
+            db.session.commit()
+            vakken = db.session.query(Vak.naam).all()
+            response = make_response(render_template("partials/vakken.html", vakken=vakken))
+            response.headers['HX-Trigger'] = jsonify({"showMessage": f"Vak '{vak_naam}' succesvol toegevoegd."})
+            return response
+        else:
+            vakken = db.session.query(Vak.naam).all()
+            response = make_response(render_template("partials/vakken.html", vakken=vakken))
+            response.headers['HX-Trigger'] = jsonify({"showMessage": f"Vak '{vak_naam}' zit al in de database."})
+            return response
+        
+    # Handle book addition
+    elif "theorie_nummer" in request.form:
+        theorie_nummer_nr = request.form["theorie_nummer"].lower()
+        if not checkContains(Theorie, "theorie_nummer", theorie_nummer_nr):
+            theorie_nummer = request.form["theorie_nummer"]
+            titel = request.form["titel"]
+            
+            file = request.files['file']
+            if file and allowed_file(file.filename):
+                filename = f"{theorie_nummer}{os.path.splitext(file.filename)[1]}"
+                file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+                file.save(file_path)
+            
+            selected_vakken = request.form.getlist("vakken")
+
+            vakken = [db.session.query(Vak).filter_by(naam=vak_name).first() or Vak(naam=vak_name) 
+                      for vak_name in selected_vakken]
+
+            theorie = Theorie(
+                titel=titel,
+                theorie_nummer=theorie_nummer,
+            )
+            
+            theorie.vakken.extend(vakken)
+
+            db.session.add(theorie)
+            db.session.commit()
+            
+            flash(f"theorie '{titel}' succesvol toegevoegd.", "success")
+            return redirect(url_for("adminworkspace"))
+        else:
+            flash(f"Boek met theorie_nummer '{theorie_nummer_nr}' zit al in de database.", "error")
+            return redirect(url_for("adminworkspace"))
+    else:
+        flash("Onbekende fout opgetreden.", "error")
+        abort(404)
 
 
 @app.route("/logout")

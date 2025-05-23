@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+
+{% block title %}Theorie Beheer{% endblock title %}
+
+{% block body %}
+<div class="container mt-5">
+  <!-- Titel en Beschrijving -->
+  <div class="text-center mb-5">
+    <h1 class="fw-bold text-primary">Theorie Beheer</h1>
+    <p class="text-muted fs-5">Voeg nieuwe theorie toe en beheer vakken.</p>
+  </div>
+
+  <div class="row">
+    <!-- Main Form Section -->
+    <div class="col-md-8">
+      <div class="card shadow-sm mb-4">
+        <div class="card-body">
+          <h3 class="card-title text-center">Theorie Toevoegen</h3>
+          <form action="{{ url_for('add') }}" method="post" enctype="multipart/form-data">
+            <div class="mb-3">
+              <label for="file" class="form-label">Theorie</label>
+              <input type="file" name="file" class="form-control" required>
+            </div>
+            <div class="mb-3">
+              <label for="titel" class="form-label">Titel</label>
+              <input type="text" name="titel" class="form-control" placeholder="titel" required>
+            </div>
+            <div class="mb-3">
+              <label for="theorie_nummer" class="form-label">Theorie Nummer</label>
+              <input type="text" name="theorie_nummer" class="form-control" placeholder="theorie nummer" required>
+            </div>
+            
+
+            <!-- Vak Section -->
+            <div class="mb-3">
+              <h5>Vakken</h5>
+              <input type="text" id="vakSearch" class="form-control mb-2" placeholder="Zoek vakken...">
+              <div id="vakContainer" class="scrollable-box">
+                {% for vak in vakken %}
+                <div class="form-check">
+                  <input type="checkbox" id="vak_{{ vak[0] }}" name="vakken" value="{{ vak[0] }}" class="form-check-input">
+                  <label for="vak_{{ vak[0] }}" class="form-check-label">{{ vak[0] }}</label>
+                </div>
+                {% endfor %}
+              </div>
+            </div>
+            <button type="submit" class="btn btn-primary w-100">Theorie Toevoegen</button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right-Side Overflow Menu -->
+    <div class="col-md-4">
+      <div class="card shadow-sm mb-4">
+        <div class="card-body">
+          <h5 class="card-title">Nieuw Vak Toevoegen</h5>
+          <!-- Add Vak Form -->
+<form hx-post="{{ url_for('add') }}" hx-target="#vakContainer" hx-swap="innerHTML">
+    <div class="mb-3">
+        <input type="text" name="vak" class="form-control" placeholder="Nieuw Vak" required>
+    </div>
+    <button type="submit" class="btn btn-success w-100">Toevoegen</button>
+</form>
+        </div>
+      </div>
+  </div>
+</div>
+
+<!-- JavaScript for Search Functionality -->
+<script>
+  function filterItems(inputId, containerId) {
+    const input = document.getElementById(inputId);
+    const filter = input.value.toLowerCase();
+    const container = document.getElementById(containerId);
+    const items = container.getElementsByClassName('form-check');
+
+    for (let i = 0; i < items.length; i++) {
+      const label = items[i].getElementsByTagName('label')[0];
+      if (label.innerText.toLowerCase().includes(filter)) {
+        items[i].style.display = '';
+      } else {
+        items[i].style.display = 'none';
+      }
+    }
+  }
+
+  document.getElementById('vakSearch').addEventListener('input', () => filterItems('vakSearch', 'vakContainer'));
+</script>
+
+<!-- CSS for Scrollable Boxes -->
+<style>
+  .scrollable-box {
+    max-height: 200px;
+    overflow-y: auto;
+    border: 1px solid #ddd;
+    padding: 10px;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+  }
+</style>
+{% endblock body %}
