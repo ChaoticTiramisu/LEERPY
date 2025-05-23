@@ -30,7 +30,10 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ms-auto">
                 <li class="nav-item me-2">
-                    <a href="{{ url_for('adminworkspace') }}" class="btn btn-primary text-white">Test</a>
+                    <a href="{{ url_for('adminworkspace') }}" class="btn btn-primary text-white">Theorie toevoegen</a>
+                </li>
+                <li class="nav-item me-2">
+                    <a href="{{ url_for('weergave') }}" class="btn btn-primary text-white">Weergave</a>
                 </li>
                 {% if rol in ['leerkracht'] %}
                     <li class="nav-item me-2">

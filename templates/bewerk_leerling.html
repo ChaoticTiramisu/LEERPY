@@ -37,12 +37,17 @@
                         </div>
 
                         <div class="mb-3">
-                            <label for="vak" class="form-label">Vak:</label>
-                            <select name="vak" id="vak" class="form-select">
-                                {% for choice, label in vak_choices %}
-                                    <option value="{{ choice }}" {% if gebruiker.vak == choice %}selected{% endif %}>{{ label }}</option>
+                            <h5>Vakken</h5>
+                            <input type="text" id="vakSearch" class="form-control mb-2" placeholder="Zoek vakken...">
+                            <div id="vakContainer" class="scrollable-box">
+                                {% for vak in vakken %}
+                                <div class="form-check">
+                                    <input type="checkbox" id="vak_{{ vak[0] }}" name="vakken" value="{{ vak[0] }}" class="form-check-input"
+                                           {% if vak[0] in def_vakken %} checked {% endif %}>
+                                    <label for="vak_{{ vak[0] }}" class="form-check-label">{{ vak[0] }}</label>
+                                </div>
                                 {% endfor %}
-                            </select>
+                            </div>
                         </div>
 
                         <div class="mb-3">

@@ -1,0 +1,17 @@
+<div class="container mt-4">
+    <div class="row">
+        {% for result in results %}
+        <div class="col-md-4 mb-4">
+            <div class="card shadow-sm h-100">
+                <!-- Book Image and Title -->
+                <img src="../static/upload/{{ result.theorie_nummer }}.png" class="card-img-top" alt="Afbeelding van {{ result.titel }}">
+                <div class="card-body text-center">
+                    <h5 class="card-title">{{ result.titel }}</h5>
+                </div>
+                        <p><strong>Theorie:</strong> {{ result.theorie_nummer }}</p>
+                        <p><strong>Vak:</strong> {{ result.vak }}</p>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>

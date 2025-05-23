@@ -259,6 +259,41 @@ def add():
         flash("Onbekende fout opgetreden.", "error")
         abort(404)
 
+@app.route("/weergave")
+def weergave():
+    email = session.get('email')
+    #indien er geen email is, wordt je terug gestuurd naar de inlog pagina
+    if email == None:
+        return redirect(url_for("login"))
+    else:
+        # functie die alle boeken weergeeft
+        theorien = db.session.query(Theorie).all() # haalt alle boeken uit database en kent hen toe aan variabelle
+        # de gebruiker van de persoon zelf opzoeken, die momenteel is ingelod en geeft hem nadien mee in de render template
+        user = db.session.query(Gebruiker).filter_by(email = session.get('email')).first()
+        return render_template("weergave.html", user = user, theorie = theorien)
+
+@app.route("/search")
+def search():
+    # je kan argumenten in de url plaatsen en die q haalt de argumenten uit de url
+    # checkt als q wel argumenten heeft
+    q = request.args.get("q")
+    if q:
+        # haalt alle resultaten uit de database, join betekent dat ze er allebei moeten worden uitgehaald. 
+        # De filter zorgt ervoor dat alles dat erop lijkt van de input wordt weergegeven
+        results = db.session.query(Theorie).join(Theorie.titel).filter(
+            or_(
+                Theorie.vak.ilike(f"%{q}%"),
+            )
+            # er is een limit van max 2O items uit de database te halen (max 20 prints)
+        ).limit(20).all()
+    else:
+        # als er geen argumenten worden meegegeven, zal hij enkel de eerste 20 items van de database eruit halen
+        results = db.session.query(Theorie).limit(20).all()
+        
+    user = db.session.query(Gebruiker).filter_by(email=session.get('email')).first()
+    # geeft gebruiker en resultaten weer terug
+    return render_template("search_result.html", results=results, user=user)
+
 
 @app.route("/logout")
 def logout():

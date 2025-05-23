@@ -29,13 +29,6 @@ class Gebruiker(Base):
     achternaam = mapped_column(String, nullable=False)
     email = mapped_column(String, nullable=False, unique=True, index=True)
     paswoord = mapped_column(String, nullable=False)
-    vak_list = [
-        ('fysica', 'Fysica'),
-        ('nederlands', 'Nederlands'),
-        ('engels', 'Engels'),
-        ('frans', 'Frans')
-    ]
-    vak = mapped_column(ChoiceType(vak_list, impl=String()), nullable=True)
     actief = mapped_column(Boolean, default=True)
     rol_list = [
         ('leerkracht', 'Leerkracht'),
