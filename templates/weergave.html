@@ -20,7 +20,7 @@
         {% for theorie in theorien %}
         <div class="col-md-4 mb-4">
             <div class="card shadow-sm h-100">
-                <img src="/static/upload/{{ theorie.theorie_nummer }}.jpg" class="card-img-top" alt="theorie_kader">
+                <img src="/static/upload/{{ theorie.theorie_nummer }}.jpg" class="card-img-top img-fluid" style="height: 350px; object-fit: cover;" alt="theorie_kader">
                 <div class="card-body d-flex flex-column">
                     <h5 class="card-title text-center">{{ theorie.titel }}</h5>
                     <h5 class="card-title text-center">{{ theorie.vak }}</h5>

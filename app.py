@@ -13,7 +13,7 @@ from datetime import datetime, timedelta
 from sqlalchemy_utils import ChoiceType
 from flask import jsonify, make_response
 
-
+ 
 # dirname, is de weg naar dit bestand. 
 dirname = os.path.abspath('instance')
 app = Flask(__name__, instance_path=dirname)
